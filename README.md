@@ -20,7 +20,7 @@ const logParser = require('aws-api-gateway-log-parser');
 
 // Configuration
 let parserConfig = {};
-parserConfig.TRUNCATED_RESPONSE_KEYS = [{key: 'code', type: 'String'}, {key: 'error', type: 'Boolean'}];
+parserConfig.TRUNCATED_RESPONSE_KEYS = [{key: 'code', type: 'String'}, {key: 'error', type: 'Boolean'}, {key: 'message', type: 'String'}];
 ...
 
 const uploadToS3 = (data, callback) => {
