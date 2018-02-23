@@ -1,6 +1,6 @@
 {
   "name": "aws-api-gateway-log-parser",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AWS API Gateway log parser",
   "main": "index.js",
   "scripts": {
@@ -25,8 +25,5 @@
     "url": "https://github.com/sahilnarain/aws-api-gateway-log-parser/issues"
   },
   "homepage": "https://github.com/sahilnarain/aws-api-gateway-log-parser#readme",
-  "dependencies": {
-    "aws-sdk": "^2.199.0",
-    "zlib": "^1.0.5"
-  }
+  "dependencies": {}
 }
