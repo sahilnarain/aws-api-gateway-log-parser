@@ -57,5 +57,5 @@ exports.handler = (event, context, callback) => {
 - [Sahil Narain](https://github.com/sahilnarain)
 
 # Credits
-- With very helpful insights from [Manu Rana](https://github.com/manurana)
+- With very helpful insights from [Manu Rana](https://github.com/manurana) and [Rabi Shah](https://github.com/rabishah)
 - Inspired by [rotemtam's serverless-aws-logs-parser](https://github.com/rotemtam/serverless-aws-logs-parser).
