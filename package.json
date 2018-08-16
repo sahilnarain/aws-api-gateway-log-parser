@@ -1,6 +1,6 @@
 {
   "name": "aws-api-gateway-log-parser",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "AWS API Gateway log parser",
   "main": "index.js",
   "scripts": {

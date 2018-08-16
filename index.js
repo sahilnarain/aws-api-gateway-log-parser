@@ -36,6 +36,7 @@ const _parseType2 = (config, data) => {
       }
 
       result[obj.key] = data.match(_regEx) && data.match(_regEx).length ? (_conversion === 'Boolean' ? eval(_conversion + '(' + eval(JSON.stringify(data.match(_regEx)[2])) + ')') : eval(_conversion + '(' + JSON.stringify(data.match(_regEx)[2]) + ')')) : null;
+      result.truncated = true;
     });
   } else if (_truncatedRegEx.test(data) && (!config.TRUNCATED_RESPONSE_KEYS || !config.TRUNCATED_RESPONSE_KEYS)) {
     result = {
