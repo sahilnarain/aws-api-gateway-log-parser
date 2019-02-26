@@ -4,7 +4,7 @@
   "description": "AWS API Gateway log parser",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,8 @@
     "url": "https://github.com/sahilnarain/aws-api-gateway-log-parser/issues"
   },
   "homepage": "https://github.com/sahilnarain/aws-api-gateway-log-parser#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^24.1.0"
+  }
 }
