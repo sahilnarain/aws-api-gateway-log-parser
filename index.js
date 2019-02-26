@@ -1,5 +1,7 @@
 "use strict";
 
+const groupBy = require("lodash.groupby");
+
 const _parseType1 = data => {
   let result = {};
 
@@ -102,23 +104,7 @@ const _parseKeyThrottle = data => {
   return result;
 };
 
-const parseLogs = (config, logs) => {
-  if (!config) {
-    config = {};
-  }
-
-  if (!logs) {
-    return null;
-  }
-
-  if (logs.messageType !== "DATA_MESSAGE") {
-    return null;
-  }
-
-  if (!logs.logEvents || !logs.logEvents.length) {
-    return null;
-  }
-
+const parseSingleRequest = (config, logEvents) => {
   const parseExps = {
     api_stage: /API Stage: (.*)/,
     request_id: /Verifying Usage Plan for request: (.{36})/,
@@ -137,13 +123,14 @@ const parseLogs = (config, logs) => {
     method_response_body: /Method response body after transformations: (.*)/,
     method_response_headers: /Method response headers: {(.*)}/,
     method_status: /Method completed with status: (.*)/,
-    key_throttle: /Key throttle limit exceeded for RestApi (.*)/
+    key_throttle: /Key throttle limit exceeded for RestApi (.*)/,
+    execution_failure: /Execution failed due to configuration error: (.*)/
   };
 
   let result = {};
   let _captureGroup = null;
 
-  for (let l of logs.logEvents) {
+  for (let l of logEvents) {
     for (let exp in parseExps) {
       if (l.message.match(parseExps[exp])) {
         _captureGroup = l.message.match(parseExps[exp])[1];
@@ -180,9 +167,9 @@ const parseLogs = (config, logs) => {
     }
   }
 
-  result["request-start-time"] = new Date(logs.logEvents[0].timestamp);
+  result["request-start-time"] = new Date(logEvents[0].timestamp);
   result["request-end-time"] = new Date(
-    logs.logEvents[logs.logEvents.length - 1].timestamp
+    logEvents[logEvents.length - 1].timestamp
   );
   result["request-execution-duration"] =
     result["request-end-time"].getTime() -
@@ -190,6 +177,35 @@ const parseLogs = (config, logs) => {
   result["@timestamp"] = result["request-start-time"].toISOString();
 
   return result;
+};
+
+const parseLogs = (config, logs) => {
+  if (!config) {
+    config = {};
+  }
+
+  if (!logs) {
+    return null;
+  }
+
+  if (logs.messageType !== "DATA_MESSAGE") {
+    return null;
+  }
+
+  if (!logs.logEvents || !logs.logEvents.length) {
+    return null;
+  }
+
+  const logEventsByRequestId = groupBy(
+    logs.logEvents,
+    logEvent => logEvent.message.match(/\(([0-9a-zA-Z-]+)\)/)[1]
+  );
+
+  return Object.keys(logEventsByRequestId).map(requestId => {
+    const logEvents = logEventsByRequestId[requestId];
+
+    return parseSingleRequest(config, logEvents);
+  });
 };
 
 module.exports = {

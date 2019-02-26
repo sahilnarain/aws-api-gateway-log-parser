@@ -37,21 +37,7 @@ test("parsing log events that is a key throttle log returns the correct results"
 
   const results = parseLogs({}, logData);
 
-  expect(results).toMatchObject({
-    api_stage: "uwe3g5jm54/Prod",
-    request_id: "4f3e3b0f-39db-11e9-9c2e-5bd7c2de5998",
-    method_status: 429,
-    "request-start-time": new Date("2019-02-26T15:29:30.161Z"),
-    "request-end-time": new Date("2019-02-26T15:29:30.162Z"),
-    "request-execution-duration": 1,
-    "@timestamp": "2019-02-26T15:29:30.161Z",
-    key_throttle: {
-      limit: 1.0,
-      burst: 1,
-      resource: "k0w8mc",
-      http_method: "POST"
-    }
-  });
+  expect(results).toMatchSnapshot(results);
 });
 
 it("parses log events", () => {
@@ -205,63 +191,561 @@ it("parses log events", () => {
 
   const results = parseLogs({}, logData);
 
-  expect(results).toMatchObject({
-    api_stage: "h733q2j6gb/Prod",
-    request_id: "515f1e99-39db-11e9-9e96-01e5c04505b9",
-    http_method: "POST",
-    http_resource_path: "/verifyReceipt",
-    request_path: "{}",
-    request_query_string: {},
-    method_request_headers: {
-      Accept: "application/json",
-      "Debug-Log-Enabled": "false",
-      "User-Agent": "python-requests/2.20.0",
-      "X-Forwarded-Proto": "https",
-      "x-correlation-id": "f82097ed-5302-4a98-8200-dad186b419be",
-      "X-Forwarded-For": "18.130.162.42",
-      Host: "h733q2j6gb.execute-api.eu-west-2.amazonaws.com",
-      "X-Forwarded-Port": "443",
-      "X-Amzn-Trace-Id": "Self",
-      "Content-Type": "application/json;charset",
-      "x-correlation-span-id": "LUUMyTw58JG0vhnGfa"
-    },
-    method_request_body: {},
-    endpoint_request_uri:
-      "https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:mock-receipt-api-2-25-VerifyReceiptFunction-8K5LT90CVKH6/invocations",
-    endpoint_request_body: {
-      '*/*","Content-Type":"application/json;charset': [
-        'utf-8"',
-        '"Debug-Log-Enabled":"false"',
-        '"Host":"h733q2j6gb.execute-api.eu-west-2.amazonaws.com"',
-        '"User-Agent":"python-requests/2.20.0"',
-        '"X-Amzn-Trace-Id":"Self'
-      ],
-      '*/*"],"Content-Type":["application/json;charset': [
-        'utf-8"]',
-        '"Debug-Log-Enabled":["false"]',
-        '"Host":["h733q2j6gb.execute-api.eu-west-2.amazonaws.com"]',
-        '"User-Agent":["python-requests/2.20.0"]',
-        '"X-Amzn-Trace-Id":["Self'
-      ]
-    },
-    integration_latency: 40,
-    endpoint_response_body: { truncated: true },
-    endpoint_response_headers: {
-      Date: "Tue",
-      "Content-Type": "application/json",
-      "Content-Length": "1136",
-      Connection: "keep-alive",
-      "x-amzn-RequestId": "57593f79-6e46-4a6f-91b1-f5d848cc2059",
-      "x-amzn-Remapped-Content-Length": "0",
-      "X-Amz-Executed-Version": "$LATEST",
-      "X-Amzn-Trace-Id": "root"
-    },
-    method_response_body: { truncated: true },
-    method_response_headers: { "X-Amzn-Trace-Id": "Root" },
-    method_status: 200,
-    "request-start-time": new Date("2019-02-26T15:29:33.732Z"),
-    "request-end-time": new Date("2019-02-26T15:29:33.774Z"),
-    "request-execution-duration": 42,
-    "@timestamp": "2019-02-26T15:29:33.732Z"
-  });
+  expect(results).toMatchSnapshot(results);
+});
+
+test("parses log data with multiple requests", () => {
+  const logData = {
+    messageType: "DATA_MESSAGE",
+    owner: "958845080241",
+    logGroup: "API-Gateway-Execution-Logs_uwe3g5jm54/Prod",
+    logStream: "f033ab37c30201f73f142449d037028d",
+    subscriptionFilters: ["ship-logs"],
+    logEvents: [
+      {
+        id: "34592909646068185811315308345685942269576775152815702016",
+        timestamp: 1551199717234,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Extended Request Id: Vt4b0HdTLPEFV3Q="
+      },
+      {
+        id: "34592909646068185811315308345685942269576775152815702017",
+        timestamp: 1551199717234,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Verifying Usage Plan for request: 5cb7ee58-39e6-11e9-be7e-29aff96747f2. API Key: API Stage: uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682434",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) API Key authorized because method 'POST /receipt' does not require API Key. Request will not contribute to throttle or quota limits"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682435",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Usage Plan check succeeded for API Key and API Stage uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682436",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Starting execution for request: 5cb7ee58-39e6-11e9-be7e-29aff96747f2"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682437",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) HTTP Method: POST, Resource Path: /receipt"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682438",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Method request path: {}"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682439",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Method request query string: {}"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682440",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Method request headers: {Accept=application/json, CloudFront-Viewer-Country=GB, CloudFront-Forwarded-Proto=https, CloudFront-Is-Tablet-Viewer=false, CloudFront-Is-Mobile-Viewer=false, User-Agent=python-requests/2.20.0, X-Forwarded-Proto=https, CloudFront-Is-SmartTV-Viewer=false, Host=uwe3g5jm54.execute-api.eu-west-2.amazonaws.com, Accept-Encoding=gzip, deflate, X-Forwarded-Port=443, X-Amzn-Trace-Id=Root=1-5c756de5-f69ee0aea16ccb26b0eb5c51, Via=1.1 e2ba00588275e7b45594ad99994de543.cloudfront.net (CloudFront), X-Amz-Cf-Id=KCem6vn221G2u9mfQEK0US4aO2sYkdTS5Sm7Hlkcdx26tmXDBTaOnA==, X-Forwarded-For=62.254.81.74, 54.239.166.85, CloudFront-Is-Desktop-Viewer=true, Content-Type=application/json}"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682441",
+        timestamp: 1551199717235,
+        message:
+          '(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Method request body before transformations: {"receiptData": "82ca4c4f-26dd-4554-a11e-c3feb5324345"}'
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682442",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Endpoint request URI: https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-StartReceiptVerifyFunc-BEGOSV0XJRHI/invocations"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682443",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Endpoint request headers: {x-amzn-lambda-integration-tag=5cb7ee58-39e6-11e9-be7e-29aff96747f2, Authorization=************************************************************************************************************************************************************************************************************************************************************************************************************************ad4886, X-Amz-Date=20190226T164837Z, x-amzn-apigateway-api-id=uwe3g5jm54, X-Amz-Source-Arn=arn:aws:execute-api:eu-west-2:958845080241:uwe3g5jm54/Prod/POST/receipt, Accept=application/json, User-Agent=AmazonAPIGateway_uwe3g5jm54, X-Amz-Security-Token=FQoGZXIvYXdzELn//////////wEaDKkvL26vW+vpO6oebyK3A7YNcUbY0OR/LDigGXvkfr8mTdBwrLp/bKgH3baW3ENcoTkggGmIs5wnL3iFe0Q1p/WMk+cHN9lRk6HXAubOe4Vg3Jpp3ASGGvBjgDKx090XEaAnj2pik830H28ezKRhHaYUhS/3KIneH/59Bt8t1T3gpVDWqPTCicr1d1GpYRGg+Xn9J5HKRVO/KXx2P8zqY1tJBGxOZg6cmR4BnwunlmyfioYGiSYurae3qLoyQdUIdoEmuXBOcH9cTtRaJwOThkehFx5yBg4NFnoKnIZD0VVBPIfjIVLuZBYxDTzvisx54HjSt [TRUNCATED]"
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682444",
+        timestamp: 1551199717235,
+        message:
+          '(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Endpoint request body after transformations: {"resource":"/receipt","path":"/receipt","httpMethod":"POST","headers":{"Accept":"application/json","Accept-Encoding":"gzip, deflate","CloudFront-Forwarded-Proto":"https","CloudFront-Is-Desktop-Viewer":"true","CloudFront-Is-Mobile-Viewer":"false","CloudFront-Is-SmartTV-Viewer":"false","CloudFront-Is-Tablet-Viewer":"false","CloudFront-Viewer-Country":"GB","Content-Type":"application/json","Host":"uwe3g5jm54.execute-api.eu-west-2.amazonaws.com","User-Agent":"python-requests/2.20.0","Via":"1.1 e2ba00588275e7b45594ad99994de543.cloudfront.net (CloudFront)","X-Amz-Cf-Id":"KCem6vn221G2u9mfQEK0US4aO2sYkdTS5Sm7Hlkcdx26tmXDBTaOnA==","X-Amzn-Trace-Id":"Root=1-5c756de5-f69ee0aea16ccb26b0eb5c51","X-Forwarded-For":"62.254.81.74, 54.239.166.85","X-Forwarded-Port":"443","X-Forwarded-Proto":"https"},"multiValueHeaders":{"Accept":["application/json"],"Accept-Encoding":["gzip, deflate"],"CloudFront-Forwarded-Proto":["https"],"CloudFront-Is-Desktop-Viewer":["true"],"CloudFront-Is-Mobi [TRUNCATED]'
+      },
+      {
+        id: "34592909646090486556513838968827477987849423514321682445",
+        timestamp: 1551199717235,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Sending request to https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-StartReceiptVerifyFunc-BEGOSV0XJRHI/invocations"
+      },
+      {
+        id: "34592909648588170018749268760679478434386040002991489038",
+        timestamp: 1551199717347,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Received response. Integration latency: 111 ms"
+      },
+      {
+        id: "34592909648588170018749268760679478434386040002991489039",
+        timestamp: 1551199717347,
+        message:
+          '(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Endpoint response body before transformations: {"statusCode":500,"body":{"message":"Request failed with status code 502\\n\\n\\"Error: Request failed with status code 502\\\\n at createError (/var/task/node_modules/axios/lib/core/createError.js:16:15)\\\\n at settle (/var/task/node_modules/axios/lib/core/settle.js:18:12)\\\\n at IncomingMessage.handleStreamEnd (/var/task/node_modules/axios/lib/adapters/http.js:201:11)\\\\n at emitNone (events.js:111:20)\\\\n at IncomingMessage.emit (events.js:208:7)\\\\n at endReadableNT (_stream_readable.js:1064:12)\\\\n at /opt/nodejs/node_modules/async-listener/glue.js:188:31\\\\n at _combinedTickCallback (internal/process/next_tick.js:138:11)\\\\n at process._tickDomainCallback [as _tickCallback] (internal/process/next_tick.js:218:9)\\""}}'
+      },
+      {
+        id: "34592909648588170018749268760679478434386040002991489040",
+        timestamp: 1551199717347,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Endpoint response headers: {Date=Tue, 26 Feb 2019 16:48:37 GMT, Content-Type=application/json, Content-Length=745, Connection=keep-alive, x-amzn-RequestId=15aba189-6719-4153-b214-46824db50ffa, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-5c756de5-f69ee0aea16ccb26b0eb5c51;sampled=1}"
+      },
+      {
+        id: "34592909648632771509146330006962549870931336726003449873",
+        timestamp: 1551199717349,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Execution failed due to configuration error: Malformed Lambda proxy response"
+      },
+      {
+        id: "34592909648632771509146330006962549870931336726003449874",
+        timestamp: 1551199717349,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) Method completed with status: 502"
+      },
+      {
+        id: "34592909648632771509146330006962549870931336726003449875",
+        timestamp: 1551199717349,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) AWS Integration Endpoint RequestId : 15aba189-6719-4153-b214-46824db50ffa"
+      },
+      {
+        id: "34592909648632771509146330006962549870931336726003449876",
+        timestamp: 1551199717349,
+        message:
+          "(5cb7ee58-39e6-11e9-be7e-29aff96747f2) X-ray Tracing ID : 1-5c756de5-f69ee0aea16ccb26b0eb5c51"
+      },
+      {
+        id: "34592909771955892457020675979655071918676775854075150357",
+        timestamp: 1551199722879,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Extended Request Id: Vt4csHibrPEFV3Q="
+      },
+      {
+        id: "34592909771955892457020675979655071918676775854075150358",
+        timestamp: 1551199722879,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Verifying Usage Plan for request: 6015718a-39e6-11e9-be7e-29aff96747f2. API Key: API Stage: uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130775",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) API Key authorized because method 'POST /receipt' does not require API Key. Request will not contribute to throttle or quota limits"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130776",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Usage Plan check succeeded for API Key and API Stage uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130777",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Starting execution for request: 6015718a-39e6-11e9-be7e-29aff96747f2"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130778",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) HTTP Method: POST, Resource Path: /receipt"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130779",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Method request path: {}"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130780",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Method request query string: {}"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130781",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Method request headers: {Accept=application/json, CloudFront-Viewer-Country=GB, CloudFront-Forwarded-Proto=https, CloudFront-Is-Tablet-Viewer=false, CloudFront-Is-Mobile-Viewer=false, User-Agent=python-requests/2.20.0, X-Forwarded-Proto=https, CloudFront-Is-SmartTV-Viewer=false, Host=uwe3g5jm54.execute-api.eu-west-2.amazonaws.com, Accept-Encoding=gzip, deflate, X-Forwarded-Port=443, X-Amzn-Trace-Id=Root=1-5c756dea-0c3dd21bd07278e4a5315d29, Via=1.1 e874817f6498def18bc3c2de8e842383.cloudfront.net (CloudFront), X-Amz-Cf-Id=vUztExf9G4abZd6OTnIaYjE2wmI3dXqp_c2WZtYUTaq0ZiK0VpjOjw==, X-Forwarded-For=62.254.81.74, 54.239.166.85, CloudFront-Is-Desktop-Viewer=true, Content-Type=application/json}"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130782",
+        timestamp: 1551199722880,
+        message:
+          '(6015718a-39e6-11e9-be7e-29aff96747f2) Method request body before transformations: {"receiptData": "82ca4c4f-26dd-4554-a11e-c3feb5324345"}'
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130783",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Endpoint request URI: https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-StartReceiptVerifyFunc-BEGOSV0XJRHI/invocations"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130784",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Endpoint request headers: {x-amzn-lambda-integration-tag=6015718a-39e6-11e9-be7e-29aff96747f2, Authorization=************************************************************************************************************************************************************************************************************************************************************************************************************************5d5104, X-Amz-Date=20190226T164842Z, x-amzn-apigateway-api-id=uwe3g5jm54, X-Amz-Source-Arn=arn:aws:execute-api:eu-west-2:958845080241:uwe3g5jm54/Prod/POST/receipt, Accept=application/json, User-Agent=AmazonAPIGateway_uwe3g5jm54, X-Amz-Security-Token=FQoGZXIvYXdzELn//////////wEaDKkvL26vW+vpO6oebyK3A7YNcUbY0OR/LDigGXvkfr8mTdBwrLp/bKgH3baW3ENcoTkggGmIs5wnL3iFe0Q1p/WMk+cHN9lRk6HXAubOe4Vg3Jpp3ASGGvBjgDKx090XEaAnj2pik830H28ezKRhHaYUhS/3KIneH/59Bt8t1T3gpVDWqPTCicr1d1GpYRGg+Xn9J5HKRVO/KXx2P8zqY1tJBGxOZg6cmR4BnwunlmyfioYGiSYurae3qLoyQdUIdoEmuXBOcH9cTtRaJwOThkehFx5yBg4NFnoKnIZD0VVBPIfjIVLuZBYxDTzvisx54HjSt [TRUNCATED]"
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130785",
+        timestamp: 1551199722880,
+        message:
+          '(6015718a-39e6-11e9-be7e-29aff96747f2) Endpoint request body after transformations: {"resource":"/receipt","path":"/receipt","httpMethod":"POST","headers":{"Accept":"application/json","Accept-Encoding":"gzip, deflate","CloudFront-Forwarded-Proto":"https","CloudFront-Is-Desktop-Viewer":"true","CloudFront-Is-Mobile-Viewer":"false","CloudFront-Is-SmartTV-Viewer":"false","CloudFront-Is-Tablet-Viewer":"false","CloudFront-Viewer-Country":"GB","Content-Type":"application/json","Host":"uwe3g5jm54.execute-api.eu-west-2.amazonaws.com","User-Agent":"python-requests/2.20.0","Via":"1.1 e874817f6498def18bc3c2de8e842383.cloudfront.net (CloudFront)","X-Amz-Cf-Id":"vUztExf9G4abZd6OTnIaYjE2wmI3dXqp_c2WZtYUTaq0ZiK0VpjOjw==","X-Amzn-Trace-Id":"Root=1-5c756dea-0c3dd21bd07278e4a5315d29","X-Forwarded-For":"62.254.81.74, 54.239.166.85","X-Forwarded-Port":"443","X-Forwarded-Proto":"https"},"multiValueHeaders":{"Accept":["application/json"],"Accept-Encoding":["gzip, deflate"],"CloudFront-Forwarded-Proto":["https"],"CloudFront-Is-Desktop-Viewer":["true"],"CloudFront-Is-Mobi [TRUNCATED]'
+      },
+      {
+        id: "34592909771978193202219206602796607636949424215581130786",
+        timestamp: 1551199722880,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Sending request to https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-StartReceiptVerifyFunc-BEGOSV0XJRHI/invocations"
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702371",
+        timestamp: 1551199723004,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Received response. Integration latency: 123 ms"
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702372",
+        timestamp: 1551199723004,
+        message:
+          '(6015718a-39e6-11e9-be7e-29aff96747f2) Endpoint response body before transformations: {"statusCode":200,"body":"{\\"subscriptionId\\":\\"5bc5e2c7-c33e-5bf7-87cf-8753c59fef95\\"}"}'
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702373",
+        timestamp: 1551199723004,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Endpoint response headers: {Date=Tue, 26 Feb 2019 16:48:43 GMT, Content-Type=application/json, Content-Length=89, Connection=keep-alive, x-amzn-RequestId=5bebd615-2628-4e51-b176-d9522190c6f6, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-5c756dea-0c3dd21bd07278e4a5315d29;sampled=0}"
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702374",
+        timestamp: 1551199723004,
+        message:
+          '(6015718a-39e6-11e9-be7e-29aff96747f2) Method response body after transformations: {"subscriptionId":"5bc5e2c7-c33e-5bf7-87cf-8753c59fef95"}'
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702375",
+        timestamp: 1551199723004,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Method response headers: {X-Amzn-Trace-Id=Root=1-5c756dea-0c3dd21bd07278e4a5315d29;Sampled=0}"
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702376",
+        timestamp: 1551199723004,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Successfully completed execution"
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702377",
+        timestamp: 1551199723004,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) Method completed with status: 200"
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702378",
+        timestamp: 1551199723004,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) AWS Integration Endpoint RequestId : 5bebd615-2628-4e51-b176-d9522190c6f6"
+      },
+      {
+        id: "34592909774743485606837003872347036702757821042322702379",
+        timestamp: 1551199723004,
+        message:
+          "(6015718a-39e6-11e9-be7e-29aff96747f2) X-ray Tracing ID : 1-5c756dea-0c3dd21bd07278e4a5315d29"
+      },
+      {
+        id: "34592909793721419770786564165793932952781576683912036396",
+        timestamp: 1551199723855,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Extended Request Id: Vt4c2HjOrPEFV3Q="
+      },
+      {
+        id: "34592909793721419770786564165793932952781576683912036397",
+        timestamp: 1551199723855,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Verifying Usage Plan for request: 60aa5e11-39e6-11e9-be7e-29aff96747f2. API Key: API Stage: uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997230",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) API Key authorized because method 'POST /echo' does not require API Key. Request will not contribute to throttle or quota limits"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997231",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Usage Plan check succeeded for API Key and API Stage uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997232",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Starting execution for request: 60aa5e11-39e6-11e9-be7e-29aff96747f2"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997233",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) HTTP Method: POST, Resource Path: /echo"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997234",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Method request path: {}"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997235",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Method request query string: {}"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997236",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Method request headers: {Accept=application/json, CloudFront-Viewer-Country=GB, CloudFront-Forwarded-Proto=https, CloudFront-Is-Tablet-Viewer=false, CloudFront-Is-Mobile-Viewer=false, User-Agent=python-requests/2.20.0, X-Forwarded-Proto=https, CloudFront-Is-SmartTV-Viewer=false, Host=uwe3g5jm54.execute-api.eu-west-2.amazonaws.com, Accept-Encoding=gzip, deflate, X-Forwarded-Port=443, X-Amzn-Trace-Id=Root=1-5c756deb-b85c76f01d43eb2c8d8bb3c0, Via=1.1 6b11bd43fbd97ec7bb8917017ae0f954.cloudfront.net (CloudFront), X-Amz-Cf-Id=_cR9ADd_XKDi544atuG_2YYYzBIWRYBC85bsER8GoVnBVV7ooeEGaA==, X-Forwarded-For=62.254.81.74, 54.239.166.85, CloudFront-Is-Desktop-Viewer=true, Content-Type=application/json}"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997237",
+        timestamp: 1551199723857,
+        message:
+          '(60aa5e11-39e6-11e9-be7e-29aff96747f2) Method request body before transformations: {"id": "2a7fd6fe-45ae-4255-95b5-9e9339d5d321"}'
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997238",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Endpoint request URI: https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-EchoPostFunction-9TJON2VOEHC0/invocations"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997239",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Endpoint request headers: {x-amzn-lambda-integration-tag=60aa5e11-39e6-11e9-be7e-29aff96747f2, Authorization=************************************************************************************************************************************************************************************************************************************************************************************************************************cb08c6, X-Amz-Date=20190226T164843Z, x-amzn-apigateway-api-id=uwe3g5jm54, X-Amz-Source-Arn=arn:aws:execute-api:eu-west-2:958845080241:uwe3g5jm54/Prod/POST/echo, Accept=application/json, User-Agent=AmazonAPIGateway_uwe3g5jm54, X-Amz-Security-Token=FQoGZXIvYXdzELn//////////wEaDKkvL26vW+vpO6oebyK3A7YNcUbY0OR/LDigGXvkfr8mTdBwrLp/bKgH3baW3ENcoTkggGmIs5wnL3iFe0Q1p/WMk+cHN9lRk6HXAubOe4Vg3Jpp3ASGGvBjgDKx090XEaAnj2pik830H28ezKRhHaYUhS/3KIneH/59Bt8t1T3gpVDWqPTCicr1d1GpYRGg+Xn9J5HKRVO/KXx2P8zqY1tJBGxOZg6cmR4BnwunlmyfioYGiSYurae3qLoyQdUIdoEmuXBOcH9cTtRaJwOThkehFx5yBg4NFnoKnIZD0VVBPIfjIVLuZBYxDTzvisx54HjStv/z [TRUNCATED]"
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997240",
+        timestamp: 1551199723857,
+        message:
+          '(60aa5e11-39e6-11e9-be7e-29aff96747f2) Endpoint request body after transformations: {"resource":"/echo","path":"/echo","httpMethod":"POST","headers":{"Accept":"application/json","Accept-Encoding":"gzip, deflate","CloudFront-Forwarded-Proto":"https","CloudFront-Is-Desktop-Viewer":"true","CloudFront-Is-Mobile-Viewer":"false","CloudFront-Is-SmartTV-Viewer":"false","CloudFront-Is-Tablet-Viewer":"false","CloudFront-Viewer-Country":"GB","Content-Type":"application/json","Host":"uwe3g5jm54.execute-api.eu-west-2.amazonaws.com","User-Agent":"python-requests/2.20.0","Via":"1.1 6b11bd43fbd97ec7bb8917017ae0f954.cloudfront.net (CloudFront)","X-Amz-Cf-Id":"_cR9ADd_XKDi544atuG_2YYYzBIWRYBC85bsER8GoVnBVV7ooeEGaA==","X-Amzn-Trace-Id":"Root=1-5c756deb-b85c76f01d43eb2c8d8bb3c0","X-Forwarded-For":"62.254.81.74, 54.239.166.85","X-Forwarded-Port":"443","X-Forwarded-Proto":"https"},"multiValueHeaders":{"Accept":["application/json"],"Accept-Encoding":["gzip, deflate"],"CloudFront-Forwarded-Proto":["https"],"CloudFront-Is-Desktop-Viewer":["true"],"CloudFront-Is-Mobile-Vie [TRUNCATED]'
+      },
+      {
+        id: "34592909793766021261183625412077004389326873406923997241",
+        timestamp: 1551199723857,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Sending request to https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-EchoPostFunction-9TJON2VOEHC0/invocations"
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762234",
+        timestamp: 1551199723869,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Received response. Integration latency: 11 ms"
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762235",
+        timestamp: 1551199723869,
+        message:
+          '(60aa5e11-39e6-11e9-be7e-29aff96747f2) Endpoint response body before transformations: {"statusCode":200,"body":"{\\"body\\":{\\"id\\":\\"2a7fd6fe-45ae-4255-95b5-9e9339d5d321\\"}}"}'
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762236",
+        timestamp: 1551199723869,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Endpoint response headers: {Date=Tue, 26 Feb 2019 16:48:43 GMT, Content-Type=application/json, Content-Length=88, Connection=keep-alive, x-amzn-RequestId=b3ebd3c9-1045-4001-ae58-fb611115ec9b, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-5c756deb-b85c76f01d43eb2c8d8bb3c0;sampled=0}"
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762237",
+        timestamp: 1551199723869,
+        message:
+          '(60aa5e11-39e6-11e9-be7e-29aff96747f2) Method response body after transformations: {"body":{"id":"2a7fd6fe-45ae-4255-95b5-9e9339d5d321"}}'
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762238",
+        timestamp: 1551199723869,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Method response headers: {X-Amzn-Trace-Id=Root=1-5c756deb-b85c76f01d43eb2c8d8bb3c0;Sampled=0}"
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762239",
+        timestamp: 1551199723869,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Successfully completed execution"
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762240",
+        timestamp: 1551199723869,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) Method completed with status: 200"
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762241",
+        timestamp: 1551199723869,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) AWS Integration Endpoint RequestId : b3ebd3c9-1045-4001-ae58-fb611115ec9b"
+      },
+      {
+        id: "34592909794033630203565992889775433008598653744995762242",
+        timestamp: 1551199723869,
+        message:
+          "(60aa5e11-39e6-11e9-be7e-29aff96747f2) X-ray Tracing ID : 1-5c756deb-b85c76f01d43eb2c8d8bb3c0"
+      },
+      {
+        id: "34592909824964763793927967187085474252761931153790599235",
+        timestamp: 1551199725256,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Extended Request Id: Vt4dEHkaLPEFV3Q="
+      },
+      {
+        id: "34592909824964763793927967187085474252761931153790599236",
+        timestamp: 1551199725256,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Verifying Usage Plan for request: 617ffe5e-39e6-11e9-be7e-29aff96747f2. API Key: API Stage: uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909825009365284325028433368545689307227876802560069",
+        timestamp: 1551199725258,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) API Key authorized because method 'POST /receipt' does not require API Key. Request will not contribute to throttle or quota limits"
+      },
+      {
+        id: "34592909825009365284325028433368545689307227876802560070",
+        timestamp: 1551199725258,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Usage Plan check succeeded for API Key and API Stage uwe3g5jm54/Prod"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540487",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Starting execution for request: 617ffe5e-39e6-11e9-be7e-29aff96747f2"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540488",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) HTTP Method: POST, Resource Path: /receipt"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540489",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Method request path: {}"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540490",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Method request query string: {}"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540491",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Method request headers: {Accept=application/json, CloudFront-Viewer-Country=GB, CloudFront-Forwarded-Proto=https, CloudFront-Is-Tablet-Viewer=false, CloudFront-Is-Mobile-Viewer=false, User-Agent=python-requests/2.20.0, X-Forwarded-Proto=https, CloudFront-Is-SmartTV-Viewer=false, Host=uwe3g5jm54.execute-api.eu-west-2.amazonaws.com, Accept-Encoding=gzip, deflate, X-Forwarded-Port=443, X-Amzn-Trace-Id=Root=1-5c756ded-19e3e86556cc4e32759fb8af, Via=1.1 e07a8966bd7e1454b7e4fbbface731a2.cloudfront.net (CloudFront), X-Amz-Cf-Id=mGmJz7sqdXXslLx6f-L_KQuS_Zpu7OCWoOsvWq4XBlSjNLU6h_ctZA==, X-Forwarded-For=62.254.81.74, 54.239.166.144, CloudFront-Is-Desktop-Viewer=true, Content-Type=application/json}"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540492",
+        timestamp: 1551199725259,
+        message:
+          '(617ffe5e-39e6-11e9-be7e-29aff96747f2) Method request body before transformations: {"receiptData": "82ca4c4f-26dd-4554-a11e-c3feb5324345"}'
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540493",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Endpoint request URI: https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-StartReceiptVerifyFunc-BEGOSV0XJRHI/invocations"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540494",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Endpoint request headers: {x-amzn-lambda-integration-tag=617ffe5e-39e6-11e9-be7e-29aff96747f2, Authorization=************************************************************************************************************************************************************************************************************************************************************************************************************************2b1a45, X-Amz-Date=20190226T164845Z, x-amzn-apigateway-api-id=uwe3g5jm54, X-Amz-Source-Arn=arn:aws:execute-api:eu-west-2:958845080241:uwe3g5jm54/Prod/POST/receipt, Accept=application/json, User-Agent=AmazonAPIGateway_uwe3g5jm54, X-Amz-Security-Token=FQoGZXIvYXdzELn//////////wEaDKkvL26vW+vpO6oebyK3A7YNcUbY0OR/LDigGXvkfr8mTdBwrLp/bKgH3baW3ENcoTkggGmIs5wnL3iFe0Q1p/WMk+cHN9lRk6HXAubOe4Vg3Jpp3ASGGvBjgDKx090XEaAnj2pik830H28ezKRhHaYUhS/3KIneH/59Bt8t1T3gpVDWqPTCicr1d1GpYRGg+Xn9J5HKRVO/KXx2P8zqY1tJBGxOZg6cmR4BnwunlmyfioYGiSYurae3qLoyQdUIdoEmuXBOcH9cTtRaJwOThkehFx5yBg4NFnoKnIZD0VVBPIfjIVLuZBYxDTzvisx54HjSt [TRUNCATED]"
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540495",
+        timestamp: 1551199725259,
+        message:
+          '(617ffe5e-39e6-11e9-be7e-29aff96747f2) Endpoint request body after transformations: {"resource":"/receipt","path":"/receipt","httpMethod":"POST","headers":{"Accept":"application/json","Accept-Encoding":"gzip, deflate","CloudFront-Forwarded-Proto":"https","CloudFront-Is-Desktop-Viewer":"true","CloudFront-Is-Mobile-Viewer":"false","CloudFront-Is-SmartTV-Viewer":"false","CloudFront-Is-Tablet-Viewer":"false","CloudFront-Viewer-Country":"GB","Content-Type":"application/json","Host":"uwe3g5jm54.execute-api.eu-west-2.amazonaws.com","User-Agent":"python-requests/2.20.0","Via":"1.1 e07a8966bd7e1454b7e4fbbface731a2.cloudfront.net (CloudFront)","X-Amz-Cf-Id":"mGmJz7sqdXXslLx6f-L_KQuS_Zpu7OCWoOsvWq4XBlSjNLU6h_ctZA==","X-Amzn-Trace-Id":"Root=1-5c756ded-19e3e86556cc4e32759fb8af","X-Forwarded-For":"62.254.81.74, 54.239.166.144","X-Forwarded-Port":"443","X-Forwarded-Proto":"https"},"multiValueHeaders":{"Accept":["application/json"],"Accept-Encoding":["gzip, deflate"],"CloudFront-Forwarded-Proto":["https"],"CloudFront-Is-Desktop-Viewer":["true"],"CloudFront-Is-Mob [TRUNCATED]'
+      },
+      {
+        id: "34592909825031666029523559056510081407579876238308540496",
+        timestamp: 1551199725259,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Sending request to https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-StartReceiptVerifyFunc-BEGOSV0XJRHI/invocations"
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917457",
+        timestamp: 1551199725444,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Received response. Integration latency: 185 ms"
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917458",
+        timestamp: 1551199725444,
+        message:
+          '(617ffe5e-39e6-11e9-be7e-29aff96747f2) Endpoint response body before transformations: {"statusCode":200,"body":"{\\"subscriptionId\\":\\"5bc5e2c7-c33e-5bf7-87cf-8753c59fef95\\"}"}'
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917459",
+        timestamp: 1551199725444,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Endpoint response headers: {Date=Tue, 26 Feb 2019 16:48:45 GMT, Content-Type=application/json, Content-Length=89, Connection=keep-alive, x-amzn-RequestId=54030987-ce05-4f2e-ac9d-7ad4b5cee7ba, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-5c756ded-19e3e86556cc4e32759fb8af;sampled=1}"
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917460",
+        timestamp: 1551199725444,
+        message:
+          '(617ffe5e-39e6-11e9-be7e-29aff96747f2) Method response body after transformations: {"subscriptionId":"5bc5e2c7-c33e-5bf7-87cf-8753c59fef95"}'
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917461",
+        timestamp: 1551199725444,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Method response headers: {X-Amzn-Trace-Id=Root=1-5c756ded-19e3e86556cc4e32759fb8af;Sampled=1}"
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917462",
+        timestamp: 1551199725444,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Successfully completed execution"
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917463",
+        timestamp: 1551199725444,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) Method completed with status: 200"
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917464",
+        timestamp: 1551199725444,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) AWS Integration Endpoint RequestId : 54030987-ce05-4f2e-ac9d-7ad4b5cee7ba"
+      },
+      {
+        id: "34592909829157303891251724337694189288019823116914917465",
+        timestamp: 1551199725444,
+        message:
+          "(617ffe5e-39e6-11e9-be7e-29aff96747f2) X-ray Tracing ID : 1-5c756ded-19e3e86556cc4e32759fb8af"
+      }
+    ]
+  };
+
+  const results = parseLogs({}, logData);
+
+  expect(results).toMatchSnapshot(results);
 });

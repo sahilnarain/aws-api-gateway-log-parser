@@ -25,7 +25,9 @@
     "url": "https://github.com/sahilnarain/aws-api-gateway-log-parser/issues"
   },
   "homepage": "https://github.com/sahilnarain/aws-api-gateway-log-parser#readme",
-  "dependencies": {},
+  "dependencies": {
+    "lodash.groupby": "^4.6.0"
+  },
   "devDependencies": {
     "jest": "^24.1.0"
   }
