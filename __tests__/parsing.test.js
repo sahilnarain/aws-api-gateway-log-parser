@@ -47,7 +47,9 @@ test("parsing log events that is a key throttle log returns the correct results"
     "@timestamp": "2019-02-26T15:29:30.161Z",
     key_throttle: {
       limit: 1.0,
-      burst: 1
+      burst: 1,
+      resource: "k0w8mc",
+      http_method: "POST"
     }
   });
 });
