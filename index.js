@@ -124,7 +124,8 @@ const parseSingleRequest = (config, logEvents) => {
     method_response_headers: /Method response headers: {(.*)}/,
     method_status: /Method completed with status: (.*)/,
     key_throttle: /Key throttle limit exceeded for RestApi (.*)/,
-    execution_failure: /Execution failed due to configuration error: (.*)/
+    execution_failure: /Execution failed due to configuration error: (.*)/,
+    customer_function_error: /Lambda execution failed with status 200 due to customer function error: (.*)/
   };
 
   let result = {};

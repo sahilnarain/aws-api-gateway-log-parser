@@ -318,3 +318,57 @@ Object {
   },
 }
 `;
+
+exports[`parsing log events where the lambda timed out 1`] = `
+Object {
+  "0": Object {
+    "@timestamp": "2019-02-27T11:31:00.425Z",
+    "api_stage": "uwe3g5jm54/Prod",
+    "customer_function_error": "2019-02-27T11:31:11.456Z 71952965-d5cc-4974-ae08-6e2138b2275c Task timed out after 10.00 seconds. Lambda request id: 71952965-d5cc-4974-ae08-6e2138b2275c",
+    "endpoint_request_body": Object {},
+    "endpoint_request_uri": "https://lambda.eu-west-2.amazonaws.com/2015-03-31/functions/arn:aws:lambda:eu-west-2:958845080241:function:log-test-1-EchoFunction-175HKORAF18IO/invocations",
+    "endpoint_response_body": Object {
+      "errorMessage": "2019-02-27T11:31:11.456Z 71952965-d5cc-4974-ae08-6e2138b2275c Task timed out after 10.00 seconds",
+    },
+    "endpoint_response_headers": Object {
+      "Connection": "keep-alive",
+      "Content-Length": "115",
+      "Content-Type": "application/json",
+      "Date": "Wed",
+      "X-Amz-Executed-Version": "$LATEST",
+      "X-Amz-Function-Error": "Unhandled",
+      "X-Amzn-Trace-Id": "root",
+      "x-amzn-Remapped-Content-Length": "0",
+      "x-amzn-RequestId": "71952965-d5cc-4974-ae08-6e2138b2275c",
+    },
+    "http_method": "GET",
+    "http_resource_path": "/echo",
+    "integration_latency": 11029,
+    "method_request_body": Object {},
+    "method_request_headers": Object {
+      "Accept": "application/json",
+      "CloudFront-Forwarded-Proto": "https",
+      "CloudFront-Is-Desktop-Viewer": "true",
+      "CloudFront-Is-Mobile-Viewer": "false",
+      "CloudFront-Is-SmartTV-Viewer": "false",
+      "CloudFront-Is-Tablet-Viewer": "false",
+      "CloudFront-Viewer-Country": "GB",
+      "Host": "uwe3g5jm54.execute-api.eu-west-2.amazonaws.com",
+      "User-Agent": "Paw/3.1.8 (Macintosh; OS X/10.14.0) GCDHTTPRequest",
+      "Via": "1.1 ddc96a08bf7ad89b0ed3c40b6e4e6d27.cloudfront.net (CloudFront)",
+      "X-Amz-Cf-Id": "Hcd55qxuXLG3Eyo00VI-2W4d-aP8JKgZ19O2-c1hIp4aqiDK77RSXw",
+      "X-Amzn-Trace-Id": "Root",
+      "X-Forwarded-For": "62.254.81.74",
+      "X-Forwarded-Port": "443",
+      "X-Forwarded-Proto": "https",
+    },
+    "method_status": 502,
+    "request-end-time": 2019-02-27T11:31:11.458Z,
+    "request-execution-duration": 11033,
+    "request-start-time": 2019-02-27T11:31:00.425Z,
+    "request_id": "286364ab-3a83-11e9-8dc8-db3cf4c83204",
+    "request_path": "{}",
+    "request_query_string": Object {},
+  },
+}
+`;
