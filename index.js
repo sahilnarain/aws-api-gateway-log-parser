@@ -42,18 +42,18 @@ const _parseType2 = (config, data) => {
       }
 
       result[obj.key] =
-        data.match(_regEx) && data.match(_regEx).length
-          ? _conversion === "Boolean"
-            ? eval(
-                _conversion +
-                  "(" +
-                  eval(JSON.stringify(data.match(_regEx)[2])) +
-                  ")"
-              )
-            : eval(
-                _conversion + "(" + JSON.stringify(data.match(_regEx)[2]) + ")"
-              )
-          : null;
+        data.match(_regEx) && data.match(_regEx).length ?
+        _conversion === "Boolean" ?
+        eval(
+          _conversion +
+          "(" +
+          eval(JSON.stringify(data.match(_regEx)[2])) +
+          ")"
+        ) :
+        eval(
+          _conversion + "(" + JSON.stringify(data.match(_regEx)[2]) + ")"
+        ) :
+        null;
       result.truncated = true;
     });
   } else if (
@@ -70,6 +70,27 @@ const _parseType2 = (config, data) => {
       result = {};
     }
   }
+
+  return result;
+};
+
+const _parseType3 = data => {
+  let result = {};
+
+  if (!data) {
+    return result;
+  }
+
+  let _objects = data.split(/\,/);
+
+  _objects.forEach(object => {
+    let _result = object.trim().replace(/\{|\}/, '').split(":");
+    if (_result[0] && _result[1] && _result[1].split(",").length === 1) {
+      result[_result[0]] = _result[1];
+    } else if (_result[0] && _result[1] && _result[1].split(",").length > 1) {
+      result[_result[0]] = _result[1].split(",");
+    }
+  });
 
   return result;
 };
@@ -137,32 +158,35 @@ const parseSingleRequest = (config, logEvents) => {
         _captureGroup = l.message.match(parseExps[exp])[1];
 
         switch (exp) {
-          case "request_query_string":
-          case "endpoint_request_headers":
-          case "endpoint_response_headers":
-          case "method_response_headers":
-          case "method_request_body":
-          case "endpoint_request_body":
-          case "method_request_headers":
-            result[exp] = _parseType1(_captureGroup);
-            break;
+        case "request_query_string":
+        case "endpoint_request_headers":
+        case "endpoint_response_headers":
+        case "method_response_headers":
+        case "method_request_headers":
+          result[exp] = _parseType1(_captureGroup);
+          break;
 
-          case "endpoint_response_body":
-          case "method_response_body":
-            result[exp] = _parseType2(config, _captureGroup);
-            break;
+        case "endpoint_response_body":
+        case "method_response_body":
+          result[exp] = _parseType2(config, _captureGroup);
+          break;
 
-          case "integration_latency":
-          case "method_status":
-            result[exp] = Number(_captureGroup);
-            break;
-          case "key_throttle":
-            result[exp] = _parseKeyThrottle(_captureGroup);
-            break;
+        case "method_request_body":
+        case "endpoint_request_body":
+          result[exp] = _parseType3(_captureGroup);
+          break;
 
-          default:
-            result[exp] = _captureGroup;
-            break;
+        case "integration_latency":
+        case "method_status":
+          result[exp] = Number(_captureGroup);
+          break;
+        case "key_throttle":
+          result[exp] = _parseKeyThrottle(_captureGroup);
+          break;
+
+        default:
+          result[exp] = _captureGroup;
+          break;
         }
       }
     }
