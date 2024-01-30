@@ -1,6 +1,6 @@
 {
   "name": "aws-api-gateway-log-parser",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "AWS API Gateway log parser",
   "main": "index.js",
   "scripts": {
@@ -10,15 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/sahilnarain/aws-api-gateway-log-parser.git"
   },
-  "keywords": [
-    "aws",
-    "api",
-    "gateway",
-    "api-gateway",
-    "log",
-    "parse",
-    "parser"
-  ],
+  "keywords": ["aws", "api", "gateway", "api-gateway", "log", "parse", "parser"],
   "author": "Sahil Narain",
   "license": "MIT",
   "bugs": {
